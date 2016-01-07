@@ -1,0 +1,5 @@
+In development environment (app.run):
+    /static/* url will access files in this folder
+
+note*:
+    do not use this in release.
