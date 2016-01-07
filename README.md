@@ -1,2 +1,3 @@
 # quickflask
-common samples for flask
+commonly used samples.
+
