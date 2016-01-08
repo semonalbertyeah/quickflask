@@ -135,7 +135,6 @@ class SqliteSessionInterface(SessionInterface):
     def open_session(self, app, request):
         sid = request.cookies.get(app.session_cookie_name)
         if not sid:
-            print 'new session'
             sid = str(uuid4())
         rv = SqliteSession(self.directory, sid)
         return rv

@@ -221,6 +221,8 @@ def del_session():
 # ======== sqlite session ====
 @app.route('/show_sql_session/')
 def show_sql_session():
+    # error here:
+    #   if no sessionid in cookie, new session will always be created.
     session = app.sql_session_interface.open_session(app, request)
     return json.dumps(dict(session), indent=4)
  
