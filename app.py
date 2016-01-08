@@ -6,10 +6,19 @@ from flask import render_template
 from flask import request, session
 from flask import make_response, redirect, abort
 
+from sqlite_session import SqliteSessionInterface
+import settings
+
+
 # if __name__ == '__main__':
 #   flask will take some action
 app = Flask(__name__)
 
+# custom config, add sql session interface into app
+session_dir = 'sessions'
+if hasattr(settings, 'SESSION_DIR'):
+    session_dir = settings.SESSION_DIR
+app.sql_session_interface = SqliteSessionInterface(session_dir)
 
 # debug mode:
 #   changed code will be reload automatically
@@ -18,8 +27,7 @@ app = Flask(__name__)
 #   app.debug=True
 #   or
 #   app.run(debug=True)
-app.debug = True
-debug=True
+#app.debug = True
 
 # secret key
 # a proper way to generate secret_key:
@@ -31,7 +39,10 @@ app.secret_key = 'A_secret_key_which_is_visible_for_the_sake_of_tutorial'
 # ======== url rules ========
 @app.route('/')
 def index():
-    return "Index Page."
+    resp = make_response('Index page.')
+    app.logger.debug('app.session_cookie_name: %s' % app.session_cookie_name)
+    return resp
+    #return "Index Page."
 
 
 # ======== variable url rules ========
@@ -206,7 +217,32 @@ def del_session():
     session.pop('test', None)
     return 'delete session value'
 
+
+# ======== sqlite session ====
+@app.route('/show_sql_session/')
+def show_sql_session():
+    session = app.sql_session_interface.open_session(app, request)
+    return json.dumps(dict(session), indent=4)
+ 
+@app.route('/set_sql_session/')
+def set_sql_session():
+    session = app.sql_session_interface.open_session(app, request)
+    session['test'] = 'just a test value'
+    resp = make_response('set sql session test')
+    app.sql_session_interface.save_session(app, session, resp)
+    return resp
+
+@app.route('/del_sql_session/')
+def del_sql_session():
+    session = app.sql_session_interface.open_session(app, request)
+    del session['test']
+    resp = make_response('delete sql session test')
+    app.sql_session_interface.save_session(app, session, resp)
+    return resp
+
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    app.logger.debug(app.session_cookie_name)
+    app.run(host='0.0.0.0', debug=True)
     #test_url_building()
 
