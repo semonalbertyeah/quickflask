@@ -1,9 +1,0 @@
-kdicBNDI391027;^&#as
-
-winserver2008:
-administrator
-123ASDzxc
-
-192.168.59.30
-administrator
-123@qwe
