@@ -242,6 +242,9 @@ def del_sql_session():
     app.sql_session_interface.save_session(app, session, resp)
     return resp
 
+# ======= flask_kvsession ======
+
+# ======= flask ession =========
 
 if __name__ == '__main__':
     app.logger.debug(app.session_cookie_name)
