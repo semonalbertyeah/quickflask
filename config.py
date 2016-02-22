@@ -1,5 +1,3 @@
-from flask.ext.sqlalchemy import SQLAlchemy
-
 class Config(object):
     # secret key
     # a proper way to generate secret key:
