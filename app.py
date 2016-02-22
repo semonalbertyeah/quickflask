@@ -54,8 +54,7 @@ Session(app)
 
 
 # ---- debug ----
-import json
-print json.dumps(app.config, indent=4)
+print dict(app.config)
 
 
 # config for Flask-Session
@@ -272,6 +271,14 @@ def del_sql_session():
 # ======= flask_kvsession ======
 
 # ======= Flask-Session =========
+@app.route('/flask_session_get/')
+def flask_session_get():
+    return session.get('key', 'not set')
+
+@app.route('/flask_session_set/')
+def flask_session_set():
+    session['key'] = 'value'
+    return 'ok'
 
 
 if __name__ == '__main__':
