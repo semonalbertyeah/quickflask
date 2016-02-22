@@ -7,10 +7,10 @@ from flask import request, session
 from flask import make_response, redirect, abort
 
 from sqlite_session import SqliteSessionInterface
-import settings
 
 # Flask-Session -> flask_session.Session
 from flask.ext.session import Session
+# Flask-SQLAlchemy -> flask_sqlalchemy
 from flask.ext.sqlalchemy import SQLAlchemy
 
 
@@ -18,29 +18,15 @@ from flask.ext.sqlalchemy import SQLAlchemy
 #   flask will take some action
 app = Flask(__name__)
 
-# custom config, add sql session interface into app
-session_dir = 'sessions'
-if hasattr(settings, 'SESSION_DIR'):
-    session_dir = settings.SESSION_DIR
-app.sql_session_interface = SqliteSessionInterface(session_dir)
-
-# debug mode:
-#   changed code will be reload automatically
-#   traceback will be shown on web page.
-# enable:
-#   app.debug=True
-#   or
-#   app.run(debug=True)
-#app.debug = True
-
-# secret key
-# a proper way to generate secret_key:
-#   import os
-#   os.urandom(22)  # generate random string with the length of 22
-# app.secret_key = 'A_secret_key_which_is_visible_for_the_sake_of_tutorial'
 
 # load config (config.py -> class Config)
 app.config.from_object('config.Config')
+
+# for sqlite session
+session_dir = 'sessions'
+if app.config.has_key('SQLITE_SESSION_DIR'):
+    session_dir = app.config['SQLITE_SESSION_DIR']
+app.sql_session_interface = SqliteSessionInterface(session_dir)
 
 # init Flask-SQLAlchemy
 db = SQLAlchemy(app)
@@ -51,15 +37,6 @@ app.config['SESSION_SQLALCHEMY'] = db
 # init Flask-Session
 # after initiation, session will be 
 Session(app)
-
-
-# ---- debug ----
-print dict(app.config)
-
-
-# config for Flask-Session
-#SESSION_TYPE="sqlalchemy"
-#SESSION_SQLALCHEMY = 
 
 
 # ======== url rules ========
@@ -282,6 +259,14 @@ def flask_session_set():
 
 
 if __name__ == '__main__':
+    # debug mode:
+    #   changed code will be reload automatically
+    #   traceback will be shown on web page.
+    # enable:
+    #   app.debug=True
+    #   or
+    #   app.run(debug=True)
+    #app.debug = True
     app.logger.debug(app.session_cookie_name)
     app.run(host='0.0.0.0', debug=True)
     #test_url_building()
