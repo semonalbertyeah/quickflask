@@ -32,7 +32,8 @@ app.sql_session_interface = SqliteSessionInterface(session_dir)
 db = SQLAlchemy(app)
 
 # update config['SESSION_SQLALCHEMY'] for Flask-Session (default to None)
-app.config['SESSION_SQLALCHEMY'] = db
+#app.config['SESSION_SQLALCHEMY'] = db
+app.config.update(SESSION_SQLALCHEMY=db)
 
 # init Flask-Session
 # after initiation, session will be 
