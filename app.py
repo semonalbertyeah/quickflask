@@ -9,6 +9,10 @@ from flask import make_response, redirect, abort
 from sqlite_session import SqliteSessionInterface
 import settings
 
+# Flask-Session -> flask_session.Session
+from flask.ext.session import Session
+from flask.ext.sqlalchemy import SQLAlchemy
+
 
 # if __name__ == '__main__':
 #   flask will take some action
@@ -33,7 +37,30 @@ app.sql_session_interface = SqliteSessionInterface(session_dir)
 # a proper way to generate secret_key:
 #   import os
 #   os.urandom(22)  # generate random string with the length of 22
-app.secret_key = 'A_secret_key_which_is_visible_for_the_sake_of_tutorial'
+# app.secret_key = 'A_secret_key_which_is_visible_for_the_sake_of_tutorial'
+
+# load config (config.py -> class Config)
+app.config.from_object('config.Config')
+
+# init Flask-SQLAlchemy
+db = SQLAlchemy(app)
+
+# update config['SESSION_SQLALCHEMY'] for Flask-Session (default to None)
+app.config['SESSION_SQLALCHEMY'] = db
+
+# init Flask-Session
+# after initiation, session will be 
+Session(app)
+
+
+# ---- debug ----
+import json
+print json.dumps(app.config, indent=4)
+
+
+# config for Flask-Session
+#SESSION_TYPE="sqlalchemy"
+#SESSION_SQLALCHEMY = 
 
 
 # ======== url rules ========
@@ -244,7 +271,8 @@ def del_sql_session():
 
 # ======= flask_kvsession ======
 
-# ======= flask ession =========
+# ======= Flask-Session =========
+
 
 if __name__ == '__main__':
     app.logger.debug(app.session_cookie_name)
