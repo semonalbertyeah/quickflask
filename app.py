@@ -40,6 +40,26 @@ app.config.update(SESSION_SQLALCHEMY=db)
 Session(app)
 
 
+# =========== steps before request handling ===========
+@app.before_request
+def step1():
+    app.logger.debug('step1')
+    abort(401)
+
+
+@app.before_request
+def step2():
+    app.logger.debug('step2')
+    #return 'intercepted by step2 of before_request' # this will intercept reuest handling
+
+
+# ==== steps after request handling ====
+@app.after_request
+def after_step1(response):
+    app.logger.debug(repr(response))
+    return response
+
+
 # ======== url rules ========
 @app.route('/')
 def index():
@@ -75,16 +95,16 @@ def show_post(post_id):
 # ======== url building ========
 def test_url_building():
     with app.test_request_context():
-        print url_for('index')
+        app.logger.debug(url_for('index'))
         
         # url with parameter
-        print url_for('show_user', username="admin")
+        app.logger.debug(url_for('show_user', username="admin"))
         
         # extra value will be appended as querystring
-        print url_for('show_post', post_id=33, extra="extra_value")
+        app.logger.debug(url_for('show_post', post_id=33, extra="extra_value"))
         
         # static url
-        print url_for('static', filename='style.css')
+        app.logger.debug(url_for('static', filename='style.css'))
 
 
 # ======== HTTP methods in url rule ========
@@ -129,7 +149,7 @@ def hello(name=None):
 @app.route('/login/', methods=['POST', 'GET'])
 def login():
     err = None
-    print dict(request.args)    # access querystring params
+    app.logger.debug(dict(request.args))    # access querystring params
     if request.method == 'POST':
         # if password or username not in request.form:
         #   -> KeyError -> HTTP 404 (automatically)
