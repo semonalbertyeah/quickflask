@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 class Config(object):
     # secret key
     # a proper way to generate secret key:
@@ -8,11 +10,12 @@ class Config(object):
     # session 
     SESSION_COOKIE_NAME = 'qckflsk_sessions'
     SESSION_COOKIE_HTTPONLY = True
-    PERMANENT_SESSION_LIFETIME = 60 * 60 * 24
+    #PERMANENT_SESSION_LIFETIME = 60 * 60 * 24
+    PERMANENT_SESSION_LIFETIME = timedelta(1)   # some flask session extensions do not support int
 
     # Flask-SQLAlchemy
     SQLALCHEMY_DATABASE_URI = \
-        'mysql+pymysql://cloudfs_web:123456@localhost/cloudfs_web_db'
+        'mysql+pymysql://qckflsk:123456@localhost/quickflask'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # Flask-Session
@@ -24,6 +27,7 @@ class Config(object):
     # Flask-KVSession
     # use default
     # custom Flask-KVSession config
-    # SQLALCHEMY_DATABASE_URI = \
-    #     'mysql+pymysql://cloudfs_web:123456@localhost/cloudfs_web_db'
+    KVSESSION_DATABASE_URI = \
+        'mysql+pymysql://qckflsk:123456@localhost/quickflask'
+    KVSESSION_DATABASE_TABLE = 'quickflask_kvsessions'
 
