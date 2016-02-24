@@ -1,1 +1,2 @@
 # sql
+config the sql database, make sure db daemon will perdiocally clear expired sessions. (MySQL event e.g.)
