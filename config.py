@@ -21,5 +21,9 @@ class Config(object):
     SESSION_SQLALCHEMY_TABLE = 'quickflask_sessions'
     SESSION_USE_SIGNER = True
 
-    # sqlite session
-    SQLITE_SESSION_DIR = 'usr_sessions'
+    # Flask-KVSession
+    # use default
+    # custom Flask-KVSession config
+    # SQLALCHEMY_DATABASE_URI = \
+    #     'mysql+pymysql://cloudfs_web:123456@localhost/cloudfs_web_db'
+
