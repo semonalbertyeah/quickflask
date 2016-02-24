@@ -205,7 +205,7 @@ def redirect_handler():
 @app.route('/abort/')
 def abort_handler():
     app.logger.debug('abort')
-    abort(404)
+    #abort(404) # this will  return http 404 page as response
 
 
 # ======== custom error page ========
