@@ -45,6 +45,11 @@ else:
     metadata.create_all()
     KVSessionExtension(store, app)
 
+from session_user import session_user
+from login_check import login_check, login_check_exempt
+
+session_user(app, login_check)
+
 
 # =========== steps before request handling ===========
 @app.before_request
@@ -69,12 +74,15 @@ def after_step1(response):
 
 
 # ======== url rules ========
+@login_check_exempt
 @app.route('/')
 def index():
     resp = make_response('Index page.')
     app.logger.debug('app.session_cookie_name: %s' % app.session_cookie_name)
     return resp
     #return "Index Page."
+
+print '---- login check exempt:', index
 
 
 # ======== variable url rules ========
@@ -239,6 +247,7 @@ def page_not_found(error):
 def show_session():
     from flask.ext.kvsession import SessionID
     print '=== session created time:', SessionID.unserialize(session.sid_s).created
+    print '=== session object', session._get_current_object()
     return json.dumps(dict(session), indent=4)
 
 @app.route('/set_session/')
@@ -257,6 +266,19 @@ def del_session():
     session.destroy()
     print 'after destroy session'
     return 'session deleted from db.'
+
+@login_check_exempt
+@app.route(r'/session_login/')
+def session_login():
+    session['username'] = 'what_ever_user'
+    session['password'] = 'what_ever_password'
+    return 'user info in db'
+
+
+@app.route(r'/session_logout/')
+def session_logout():
+    session.destroy()
+    return 'user session deleted'
 
 
 # ======= flask_kvsession ======
