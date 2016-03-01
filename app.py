@@ -45,10 +45,10 @@ else:
     metadata.create_all()
     KVSessionExtension(store, app)
 
-from session_user import session_user
-from login_check import login_check, login_check_exempt
 
-session_user(app, login_check)
+# init user and login check
+from login_check import apply_login_check, login_check_exempt, user
+apply_login_check(app)
 
 
 # =========== steps before request handling ===========
@@ -268,16 +268,18 @@ def del_session():
     return 'session deleted from db.'
 
 @login_check_exempt
-@app.route(r'/session_login/')
-def session_login():
-    session['username'] = 'what_ever_user'
-    session['password'] = 'what_ever_password'
+@app.route(r'/simple_login/')
+def simple_login():
+    user['username'] = 'admin'
+    user['password'] = '123456'
+
     return 'user info in db'
 
 
-@app.route(r'/session_logout/')
-def session_logout():
-    session.destroy()
+@login_check_exempt
+@app.route(r'/logout/')
+def logout():
+    user.destroy()
     return 'user session deleted'
 
 
