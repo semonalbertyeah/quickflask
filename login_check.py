@@ -30,18 +30,25 @@ def login_check(user):
     if view in _login_check_exempts:
         return True
 
+    if user.new:
+        current_app.logger.error('no session')
+        return False
+
     # no username and password in session
     if not user.has_key('username') or \
        not user.has_key('password'):
+        current_app.logger.error('no username or password in session')
         return False
 
-    passwd =  user.get(user['username'], None)
+    passwd =  test_uesrs.get(user['username'], None)
     if passwd:
         if passwd == user['password']:
             return True
         else:
+            current_app.logger.error('wrong password for user "%s"' % user['username'])
             return False
     else:
+        current_app.logger.error('no password for user "%s"' % user['username'])
         return False
 
 

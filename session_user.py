@@ -36,6 +36,7 @@ class SessionUser(object):
 def apply_session_user(app, user_cls=SessionUser, user_check=None):
     @app.before_request
     def get_user():
+        session.permanent = app.config.get('SESSION_PERMANENT', False)
         user = user_cls(session)
         _request_ctx_stack.top.user = user     # 
 

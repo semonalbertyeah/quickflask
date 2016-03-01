@@ -12,6 +12,7 @@ class Config(object):
     SESSION_COOKIE_HTTPONLY = True
     #PERMANENT_SESSION_LIFETIME = 60 * 60 * 24
     PERMANENT_SESSION_LIFETIME = timedelta(1)   # some flask session extensions do not support int
+    SESSION_PERMANENT = True    # This will be read by session_user.
 
     # Flask-SQLAlchemy
     SQLALCHEMY_DATABASE_URI = \

@@ -69,7 +69,7 @@ def step2():
 # ==== steps after request handling ====
 @app.after_request
 def after_step1(response):
-    app.logger.debug(repr(response))
+    #app.logger.debug(repr(response))
     return response
 
 
@@ -276,7 +276,6 @@ def simple_login():
     return 'user info in db'
 
 
-@login_check_exempt
 @app.route(r'/logout/')
 def logout():
     user.destroy()
@@ -303,6 +302,16 @@ def logout():
 #   save procedure: save data to db; save signed sid_s to cookie(expiration is refreshed)
 
 # ======= Flask-Session =========
+
+
+@login_check_exempt
+@app.route(r'/test/')
+def test():
+    """
+        a test interface
+    """
+    app.logger.debug('session.permanent: %s' % session.permanent)
+    return 'a test interface'
 
 if __name__ == '__main__':
     # debug mode:
