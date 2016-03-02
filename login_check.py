@@ -52,8 +52,8 @@ def login_check(user):
         return False
 
 
-def apply_login_check(app):
-    apply_session_user(app, user_check=login_check)
+def apply_login_check(app_or_blueprint):
+    apply_session_user(app_or_blueprint, user_check=login_check)
 
 
 from session_user import user

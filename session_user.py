@@ -1,6 +1,6 @@
 from werkzeug.datastructures import CallbackDict
 from werkzeug.local import LocalProxy
-from flask import session, abort, _request_ctx_stack
+from flask import current_app, session, abort, _request_ctx_stack
 
 class SessionUser(object):
     """
@@ -33,12 +33,12 @@ class SessionUser(object):
 
 
 
-def apply_session_user(app, user_cls=SessionUser, user_check=None):
-    @app.before_request
+def apply_session_user(app_or_blueprint, user_cls=SessionUser, user_check=None):
+    @app_or_blueprint.before_request
     def get_user():
-        session.permanent = app.config.get('SESSION_PERMANENT', False)
+        session.permanent = current_app.config.get('SESSION_PERMANENT', False)
         user = user_cls(session)
-        _request_ctx_stack.top.user = user     # 
+        _request_ctx_stack.top.user = user
 
         if user_check is not None:
             if not user_check(user):

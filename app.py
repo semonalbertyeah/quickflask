@@ -48,7 +48,7 @@ else:
 
 # init user and login check
 from login_check import apply_login_check, login_check_exempt, user
-apply_login_check(app)
+#apply_login_check(app)
 
 
 # =========== steps before request handling ===========
@@ -73,8 +73,13 @@ def after_step1(response):
     return response
 
 
+# ==== sub url route modules ====
+from suburl import sub
+app.register_blueprint(sub, url_prefix='/sub')
+
+
 # ======== url rules ========
-@login_check_exempt
+#@login_check_exempt
 @app.route('/')
 def index():
     resp = make_response('Index page.')
@@ -267,9 +272,12 @@ def del_session():
     print 'after destroy session'
     return 'session deleted from db.'
 
-@login_check_exempt
+#@login_check_exempt
 @app.route(r'/simple_login/')
 def simple_login():
+    if not user:
+        abort(500)
+
     user['username'] = 'admin'
     user['password'] = '123456'
 
@@ -278,6 +286,8 @@ def simple_login():
 
 @app.route(r'/logout/')
 def logout():
+    if not user:
+        abort(500)
     user.destroy()
     return 'user session deleted'
 
@@ -304,7 +314,7 @@ def logout():
 # ======= Flask-Session =========
 
 
-@login_check_exempt
+#@login_check_exempt
 @app.route(r'/test/')
 def test():
     """
