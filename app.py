@@ -197,6 +197,29 @@ def upload_file():
 
 
 
+# ======== request arams ========
+@app.route(r'/request_demonstration/', methods=['GET', 'POST'])
+def request_demonstration():
+    print 'query string:', request.args
+    print 'request data:', request.data
+    print 'form data:', request.form
+    print 'params(form+query_string):', request.values
+    print 'files(from form data):', request.files
+    print 'cookies:', request.cookies
+    print 'http headers:', request.headers
+    print 'request path:', request.path
+    print 'request full path:', request.full_path
+    print 'request url:', request.url
+    print 'request base url(without querystring):', request.url
+    print 'url root:', request.url_root
+    print 'host url:', request.host_url
+    print 'host:', request.host
+    print 'host:', request.host
+    print 'access route:', request.access_route
+    print 'remote addr:', request.remote_addr
+    return 'request demonstrated in console.'
+
+
 
 # ======== cookie ========
 # flask.request.cookies
