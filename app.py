@@ -18,7 +18,7 @@ app = Flask(__name__)
 app.config.from_object('config.Config')
 
 
-use_kvsession = True
+use_kvsession = False
 
 if not use_kvsession:
     # init Flask-Session
